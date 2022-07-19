@@ -40,8 +40,6 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
 const shopCart = document.querySelector('.cart__items');
 
 const load = () => {
-  console.log('load sendo carregado');
-  /* const container = document.getElementsByClassName('container'); */
   const loading = document.createElement('p');
   loading.classList.add('loading');
   loading.innerText = 'carregando...';
@@ -49,7 +47,6 @@ const load = () => {
 };
 
 const removeLoad = () => {
-  console.log('load sendo removido');
   removeLoading = document.querySelector('.loading');
   removeLoading.remove();
 };
@@ -65,7 +62,6 @@ const loadProduct = async (product = 'computador') => {
   };
 
 const loadItensCart = async (item) => {
-  /* const shopCart = document.querySelector('.cart__items'); */
   const idItem = getSkuFromProductItem(item.target.parentNode);
   load();
   const { id: sku, title: name, price: salePrice } = await fetchItem(idItem);
@@ -91,6 +87,4 @@ document.querySelector('.empty-cart').addEventListener('click', clearCart);
 window.onload = async () => { 
   await loadProduct();
   addProductCart();
-  /* load();
-  removeLoad(); */
 };

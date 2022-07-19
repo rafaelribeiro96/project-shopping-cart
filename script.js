@@ -50,6 +50,7 @@ const loadItensCart = async (item) => {
   const shopCart = document.querySelector('.cart__items');
   const idItem = getSkuFromProductItem(item.target.parentNode);
   const { id: sku, title: name, price: salePrice } = await fetchItem(idItem);
+  /* const destructureProduct = ({ sku, name, salePrice }); */
   const product = createCartItemElement({ sku, name, salePrice });
   shopCart.appendChild(product);
 };

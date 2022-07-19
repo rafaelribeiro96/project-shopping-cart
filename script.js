@@ -26,7 +26,7 @@ const createProductItemElement = ({ sku, name, image }) => {
 const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
 const cartItemClickListener = (event) => {
-  // coloque seu código aqui
+  event.target.remove();
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -46,6 +46,22 @@ const loadProduct = async (product = 'computador') => {
   });
   };
 
-window.onload = () => { 
-  loadProduct();
+const loadItensCart = async (item) => {
+  const shopCart = document.querySelector('.cart__items');
+  const idItem = getSkuFromProductItem(item.target.parentNode);
+  const { id: sku, title: name, price: salePrice } = await fetchItem(idItem);
+  const product = createCartItemElement({ sku, name, salePrice });
+  shopCart.appendChild(product);
+};
+
+const addProductCart = () => {
+  const require = document.querySelectorAll('.item__add');
+  require.forEach((product) => {
+    product.addEventListener('click', loadItensCart);
+  });
+};
+
+window.onload = async () => { 
+  await loadProduct();
+  addProductCart();
 };

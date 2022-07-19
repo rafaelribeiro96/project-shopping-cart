@@ -37,9 +37,27 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-/* const { fetchProducts } = require('./helpers/fetchProducts'); */
+const shopCart = document.querySelector('.cart__items');
+
+const load = () => {
+  console.log('load sendo carregado');
+  /* const container = document.getElementsByClassName('container'); */
+  const loading = document.createElement('p');
+  loading.classList.add('loading');
+  loading.innerText = 'carregando...';
+  shopCart.appendChild(loading);
+};
+
+const removeLoad = () => {
+  console.log('load sendo removido');
+  removeLoading = document.querySelector('.loading');
+  removeLoading.remove();
+};
+
 const loadProduct = async (product = 'computador') => {
+  load();
   const { results } = await fetchProducts(product);
+  removeLoad();
   const itens = document.querySelector('.items');
   results.forEach(({ id: sku, title: name, thumbnail: image }) => {
   itens.appendChild(createProductItemElement({ sku, name, image }));
@@ -47,10 +65,11 @@ const loadProduct = async (product = 'computador') => {
   };
 
 const loadItensCart = async (item) => {
-  const shopCart = document.querySelector('.cart__items');
+  /* const shopCart = document.querySelector('.cart__items'); */
   const idItem = getSkuFromProductItem(item.target.parentNode);
+  load();
   const { id: sku, title: name, price: salePrice } = await fetchItem(idItem);
-  /* const destructureProduct = ({ sku, name, salePrice }); */
+  removeLoad();
   const product = createCartItemElement({ sku, name, salePrice });
   shopCart.appendChild(product);
 };
@@ -62,7 +81,16 @@ const addProductCart = () => {
   });
 };
 
+const clearCart = () => {
+  const productsCartList = document.querySelector('ol');
+  while (productsCartList.firstChild) { productsCartList.removeChild(productsCartList.lastChild); }
+};
+
+document.querySelector('.empty-cart').addEventListener('click', clearCart);
+
 window.onload = async () => { 
   await loadProduct();
   addProductCart();
+  /* load();
+  removeLoad(); */
 };

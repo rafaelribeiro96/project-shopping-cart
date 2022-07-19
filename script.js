@@ -20,7 +20,6 @@ const createProductItemElement = ({ sku, name, image }) => {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
   return section;
 };
 
@@ -38,4 +37,15 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-window.onload = () => { };
+/* const { fetchProducts } = require('./helpers/fetchProducts'); */
+const loadProduct = async (product = 'computador') => {
+  const { results } = await fetchProducts(product);
+  const itens = document.querySelector('.items');
+  results.forEach(({ id: sku, title: name, thumbnail: image }) => {
+  itens.appendChild(createProductItemElement({ sku, name, image }));
+  });
+  };
+
+window.onload = () => { 
+  loadProduct();
+};

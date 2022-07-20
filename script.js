@@ -68,6 +68,7 @@ const loadItensCart = async (item) => {
   removeLoad();
   const product = createCartItemElement({ sku, name, salePrice });
   shopCart.appendChild(product);
+  saveCartItems(document.querySelector('.cart__items').innerHTML);
 };
 
 const addProductCart = () => {
@@ -84,7 +85,14 @@ const clearCart = () => {
 
 document.querySelector('.empty-cart').addEventListener('click', clearCart);
 
+const getSavedCart = () => {
+  getSavedCartItems();
+  document.querySelectorAll('.cart__item')
+  .forEach((product) => product.addEventListener('click', cartItemClickListener));
+};
+
 window.onload = async () => { 
+  getSavedCart();
   await loadProduct();
   addProductCart();
 };

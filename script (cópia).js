@@ -14,15 +14,13 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
-const createProductItemElement = ({ sku, name, image, salePrice }) => {
+const createProductItemElement = ({ sku, name, image }) => {
   const section = document.createElement('section');
   section.className = 'item';
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createCustomElement('span', 'item__price', salePrice
-  .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })));
+  section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
   return section;
 };
@@ -43,26 +41,18 @@ const priceUpdate = () => {
 };
 
 const cartItemClickListener = (event) => {
-  if (event.target.tagName !== 'IMG' || event.target.tagName === 'P') {
-    event.target.remove();
-    priceUpdate();
+  event.target.remove();
+  priceUpdate();
   const productsCart = document.querySelector(cartItems);
   saveCartItems('cartItems', productsCart.innerHTML);
-  }
-  if (event.target.tagName === 'IMG' || event.target.tagName === 'P') {
-    event.target.parentElement.remove();
-    priceUpdate();
-  const productsCart = document.querySelector(cartItems);
-  saveCartItems('cartItems', productsCart.innerHTML);
-  }
 };
 
-const createCartItemElement = ({ name, salePrice, image }) => {
+const createCartItemElement = ({ sku, name, salePrice, image }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerHTML = `<img class="cart__image" src="${image}">
   ${name} <br><br>
-  R$${salePrice.toFixed(2)}`;
+  Preço: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 };
@@ -86,15 +76,14 @@ const loadProduct = async (product = 'computador') => {
   const { results } = await fetchProducts(product);
   removeLoad();
   const itens = document.querySelector('.items');
-  results.forEach(({ id: sku, title: name, price: salePrice, thumbnail: image }) => {
-  itens.appendChild(createProductItemElement({ sku, name, salePrice, image }));
+  results.forEach(({ id: sku, title: name, thumbnail: image }) => {
+  itens.appendChild(createProductItemElement({ sku, name, image }));
   });
   };
 
 const loadItensCart = async (item) => {
   const idItem = getSkuFromProductItem(item.target.parentNode);
   load();
-  console.log('loadItensCart');
   const { id: sku, title: name, price: salePrice, thumbnail: image } = await fetchItem(idItem);
   removeLoad();
   const product = createCartItemElement({ sku, name, salePrice, image });
@@ -107,7 +96,6 @@ const addProductCart = () => {
   const require = document.querySelectorAll('.item__add');
   require.forEach((product) => {
     product.addEventListener('click', loadItensCart);
-    console.log('addProductCart');
   });
 };
 
@@ -125,56 +113,9 @@ const getSavedCart = () => {
   .forEach((product) => product.addEventListener('click', cartItemClickListener));
 };
 
-const removeItems = () => {
-  const items = document.querySelectorAll('.item');
-  items.forEach((item) => {
-    item.remove();
-  });
-};
-
-const searchItems = async () => {
-  const searchInput = document.querySelector('#search__input');
-  if (searchInput.value.length > 1) {
-    removeItems();
-    await loadProduct(searchInput.value);
-    await addProductCart();
-  }
-};
-
-const searchProducts = () => {
-  const searchInput = document.querySelector('#search__input');
-  const searchIcon = document.querySelector('#search__button');
-  searchIcon.addEventListener('click', searchItems);
-  searchInput.addEventListener('keyup', (event) => {
-    if (event.key === 'Enter') {
-      searchItems();
-    }
-  });
-};
-
-const searchItemsList = async (productClick) => {
-  const searchInput = await productClick;
-    removeItems();
-    await loadProduct(searchInput);
-    await addProductCart();
-};
-
-const searchByList = async () => {
-const searchInList = document.querySelector('#search__list');
-  searchInList.addEventListener('click', (event) => {
-    const productClick = (event.target.innerText);
-    console.log(productClick);
-    searchItemsList(productClick);
-  });
-};
-
 window.onload = async () => { 
   getSavedCart();
   await loadProduct();
   addProductCart();
-  searchItemsList();
-  searchItems();
-  searchProducts();
-  searchByList();
   priceUpdate();
 };

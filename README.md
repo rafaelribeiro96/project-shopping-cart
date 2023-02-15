@@ -45,7 +45,7 @@ O projeto tem por objetivo a avaliação e prática dos conhecimentos adquiridos
 ## ANTES DE INICIALIZAR A APLICAÇÃO:
 
 1. Clone o repositório
-  * `git clone git@github.com:THIAGOMARTINS367/Trybe-project-shopping-cart.git`
+  * git clone git@github.com:rafaelribeiro96/project-shopping-cart.git
   * Entre na pasta do repositório na sua máquina:
     * `Trybe-project-shopping-cart`
 
